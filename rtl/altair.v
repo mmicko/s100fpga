@@ -2,7 +2,8 @@ module altair(
 	input clk,
 	input reset,
 	input rx,
-	output tx
+	output tx,
+	output sync
 );
 	reg ce = 0;
 	reg intr = 0;	

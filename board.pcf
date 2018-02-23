@@ -1,3 +1,4 @@
 # 12 MHz clock
 set_io -nowarn rx      	  34
 set_io -nowarn tx         37
+set_io -nowarn sync       31

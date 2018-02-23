@@ -1,3 +1,5 @@
 /test.bin
 /test.blif
 /test.txt
+/*.vcd
+/a.out

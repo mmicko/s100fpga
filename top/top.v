@@ -1,9 +1,10 @@
 module top
 (
   input rx,
-  output tx
+  output tx,
+  output sync
 );
-  wire clk;
+  wire clk;  
 
   SB_HFOSC #(.CLKHF_DIV("0b10")) u_SB_HFOSC(.CLKHFPU(1), .CLKHFEN(1), .CLKHF(clk));
 	
@@ -14,6 +15,6 @@ module top
 		reset_cnt <= reset_cnt + !resetn;
 	end
 
-  altair machine(.clk(clk),.reset(~resetn),.rx(rx),.tx(tx));
+  altair machine(.clk(clk),.reset(~resetn),.rx(rx),.tx(tx),.sync(sync));
 
 endmodule
