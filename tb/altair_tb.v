@@ -1,6 +1,6 @@
 `timescale 1ns/1ns 
 
-module top_tb();
+module altair_tb();
 	reg clk = 0;
 	reg reset;
 	reg rx = 1'b1;
@@ -13,8 +13,8 @@ module top_tb();
 
 	initial
 	begin
-		$dumpfile("top_tb.vcd");
-		$dumpvars(0,top_tb);
+		$dumpfile("altair_tb.vcd");
+		$dumpvars(0,altair_tb);
 		reset = 1;
 		#20
 		reset = 0;

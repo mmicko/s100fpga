@@ -91,8 +91,8 @@ module altair(
 	
 	ram_memory #(.ADDR_WIDTH(8)) stack(.clk(clk),.addr(addr[7:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
 	
-	//ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/tinybasic-1.0.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
-	ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/basic4k32.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
+	ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/tinybasic-1.0.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
+	//ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/basic4k32.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
 	
 	serial_io sio(.clk(clk),.reset(reset),.addr(addr[0]),.data_in(odata),.rd(rd_sio),.we(wr_sio),.data_out(sio_out),.ce(ce),.rx(rx),.tx(tx));
 
