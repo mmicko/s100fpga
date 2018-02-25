@@ -87,7 +87,7 @@ module altair(
 	
 	jmp_boot boot_ff(.clk(clk),.reset(reset),.rd(rd_boot),.data_out(boot_out),.valid(boot));
 	
-	prom_memory #(.ADDR_WIDTH(8),.FILENAME("roms/altair/turnmon.mem")) rom(.clk(clk),.addr(addr[7:0]),.rd(rd_rom),.data_out(rom_out));
+	rom_memory #(.ADDR_WIDTH(8),.FILENAME("roms/altair/turnmon.mem")) rom(.clk(clk),.addr(addr[7:0]),.rd(rd_rom),.data_out(rom_out));
 	
 	ram_memory #(.ADDR_WIDTH(8)) stack(.clk(clk),.addr(addr[7:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
 	

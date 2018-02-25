@@ -1,4 +1,4 @@
-module prom_memory(
+module rom_memory(
   input clk,
   input [ADDR_WIDTH-1:0] addr,
   input rd,

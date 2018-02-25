@@ -35,6 +35,14 @@ module i8251(
 
   always @(posedge clk)
   begin
+	  `ifdef DEBUG
+		if (we)
+		begin
+			if (addr==1'b0 && ce)
+				$write("%c",data_in);
+		end
+		`endif
+
 		if (rd)
 		begin
 			if (addr==1'b1)
