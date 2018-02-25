@@ -1,8 +1,4 @@
-/altair.bin
-/altair.blif
-/altair.txt
-/sdk80.bin
-/sdk80.blif
-/sdk80.txt
+/build
+/*.bin
 /*.vcd
 /a.out
