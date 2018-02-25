@@ -1,4 +1,4 @@
-module serial_io(
+module i8251(
   input clk,
   input reset,
   input addr,
@@ -24,9 +24,9 @@ module serial_io(
 
 	.cfg_divider(12000000/9600),
 
-	.reg_dat_we(we && (addr==1'b1)),
-	.reg_dat_re(rd && (addr==1'b1)),
-	.reg_dat_di(data_in & 8'h7f),
+	.reg_dat_we(we && (addr==1'b0)),
+	.reg_dat_re(rd && (addr==1'b0)),
+	.reg_dat_di(data_in),
 	.reg_dat_do(uart_out),
 	.reg_dat_wait(dat_wait),
 	.recv_buf_valid(valid),
@@ -37,8 +37,8 @@ module serial_io(
   begin
 		if (rd)
 		begin
-			if (addr==1'b0)
-				data_out <= { 2'b00,valid, 1'b0,   2'b00, tdre, valid };
+			if (addr==1'b1)
+				data_out <= { 4'b0000,  2'b00, valid, tdre };
 			else 
 				data_out <= uart_out;
 		end

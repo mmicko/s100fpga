@@ -1,12 +1,14 @@
 module prom_memory(
   input clk,
-  input [7:0] addr,
+  input [ADDR_WIDTH-1:0] addr,
   input rd,
   output reg [7:0] data_out
 );
 	parameter FILENAME = "";
 
-  reg [7:0] rom[0:255] /* verilator public_flat */;
+  parameter integer ADDR_WIDTH = 8;
+
+  reg [7:0] rom[0:(2 ** ADDR_WIDTH)-1] /* verilator public_flat */;
   
   initial
   begin
