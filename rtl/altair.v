@@ -87,12 +87,12 @@ module altair(
 	
 	jmp_boot boot_ff(.clk(clk),.reset(reset),.rd(rd_boot),.data_out(boot_out),.valid(boot));
 	
-	prom_memory #(.FILENAME("roms/turnmon.mem")) rom(.clk(clk),.addr(addr[7:0]),.rd(rd_rom),.data_out(rom_out));
+	prom_memory #(.FILENAME("roms/altair/turnmon.mem")) rom(.clk(clk),.addr(addr[7:0]),.rd(rd_rom),.data_out(rom_out));
 	
 	ram_memory #(.ADDR_WIDTH(8)) stack(.clk(clk),.addr(addr[7:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
 	
-	ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/tinybasic-1.0.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
-	//ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/basic4k32.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
+	ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/altair/tinybasic-1.0.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
+	//ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/altair/basic4k32.mem")) mainmem(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_rammain),.we(wr_rammain),.data_out(rammain_out));
 	
 	serial_io sio(.clk(clk),.reset(reset),.addr(addr[0]),.data_in(odata),.rd(rd_sio),.we(wr_sio),.data_out(sio_out),.ce(ce),.rx(rx),.tx(tx));
 
