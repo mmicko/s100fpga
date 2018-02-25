@@ -71,7 +71,7 @@ module sdk80(
 	
 	i8080 cpu(.clk(clk),.ce(ce),.reset(reset),.intr(intr),.idata(idata),.addr(addr),.sync(sync),.rd(rd),.wr_n(wr_n),.inta_n(inta_n),.odata(odata),.inte_o(inte_o));
 		
-	rom_memory #(.ADDR_WIDTH(12),.FILENAME("roms/sdk80/mcs80.mem")) rom(.clk(clk),.addr(addr[11:0]),.rd(rd_rom),.data_out(rom_out));
+	rom_memory #(.ADDR_WIDTH(12),.FILENAME("roms/sdk80/mcs80.a14.mem")) rom(.clk(clk),.addr(addr[11:0]),.rd(rd_rom),.data_out(rom_out));
 	
 	ram_memory #(.ADDR_WIDTH(10)) ram(.clk(clk),.addr(addr[9:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
 	
