@@ -15,7 +15,10 @@ SDK80_MEM=roms/sdk80/mcs80.a14.mem
 ISBC8010_SRC=rtl/isbc8010.v rtl/i8251.v rtl/i8080.v rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
 ISBC8010_MEM=roms/isbc8010/sbc80p.a23.mem roms/isbc8010/sbc80p.a24.mem roms/isbc8010/basic_blc_1.a24.mem roms/isbc8010/basic_blc_2.a25.mem roms/isbc8010/basic_blc_3.a26.mem roms/isbc8010/basic_blc_4.a27.mem
 
-.PHONY: all clean test_altair test_sdk80 test_isbc8010
+ZEXALL_SRC=rtl/zexall.v rtl/i8251.v rtl/z80/tv80n.v rtl/z80/tv80_reg.v rtl/z80/tv80_mcode.v rtl/z80/tv80_core.v rtl/z80/tv80_alu.v  rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
+ZEXALL_MEM=roms/zexall/zexall.bin.mem
+
+.PHONY: all clean test_altair test_sdk80 test_isbc8010 test_zexall
 
 all: altair.bin
 
@@ -38,6 +41,11 @@ isbc8010.bin: build top/top_isbc8010.v $(ISBC8010_SRC) $(ISBC8010_MEM)
 	arachne-pnr -d 5k -p board.pcf build/isbc8010.blif -o build/isbc8010.txt
 	icepack build/isbc8010.txt isbc8010.bin
 
+zexall.bin: build top/top_zexall.v $(ZEXALL_SRC) $(ZEXALL_MEM)
+	yosys -q -p "synth_ice40 -top top -blif build/zexall.blif" top/top_zexall.v $(ZEXALL_SRC)
+	arachne-pnr -d 5k -p board.pcf build/zexall.blif -o build/zexall.txt
+	icepack build/zexall.txt zexall.bin
+
 build:
 	@mkdir -p build
 
@@ -57,4 +65,8 @@ test_sdk80: tb/sdk80_tb.v $(SDK80_SRC) $(SDK80_MEM)
 
 test_isbc8010: tb/isbc8010_tb.v $(ISBC8010_SRC) $(ISBC8010_MEM)
 	iverilog -D DEBUG tb/isbc8010_tb.v $(ISBC8010_SRC)
+	vvp a.out
+
+test_zexall: tb/zexall_tb.v $(ZEXALL_SRC) $(ZEXALL_MEM)
+	iverilog -D DEBUG tb/zexall_tb.v $(ZEXALL_SRC)
 	vvp a.out
