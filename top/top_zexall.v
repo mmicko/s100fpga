@@ -15,6 +15,6 @@ module top
 		reset_cnt <= reset_cnt + !resetn;
 	end
 
-  zexall machine(.clk(clk),.reset(~resetn),.rx(rx),.tx(tx),.sync(sync));
+  zexall machine(.clk(clk),.reset(~resetn),.rx(rx),.tx(tx),.mreq_n(sync));
 
 endmodule

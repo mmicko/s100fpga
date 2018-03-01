@@ -3,7 +3,7 @@ module zexall(
 	input reset,
 	input rx,
 	output tx,
-	output sync
+	output mreq_n
 );
 	reg ce = 0;
 	reg [7:0] idata;
@@ -30,66 +30,75 @@ module zexall(
 		ce <= !ce;
 	end
 	
-	wire [7:0] rom_out;
-	wire [7:0] ram_out;
-	wire [7:0] sio_out;
+	wire [7:0] ram1_out;
+	wire [7:0] ram2_out;	
 	
-	reg wr_ram;	
-	reg rd_ram;
+	reg wr_ram1;	
+	reg wr_ram2;	
+	reg rd_ram1;
+	reg rd_ram2;
+
+	reg wr_uart;
+	reg rd_uart;
 	
 	reg [7:0] r_ack;
 	reg [7:0] r_req;
 	reg [7:0] r_req_last;
 	reg [7:0] r_data;
 	
-	initial
-	begin
-		r_ack = 0;
-		r_req = 0;
-		r_req_last = 0;
-		r_data = 0;
-	end
-	
-	always @(*)
-	begin
-		rd_ram = 0;
-		casex ({mreq_n,addr[15:8]})
-			// MEM MAP
-			{1'b0,8'b00xxxxxx}: begin idata = ram_out; rd_ram = ~rd_n; end         // 0x0000-0x0fff
-		endcase
-	end
-	
-	always @(*)
-	begin
-		casex ({~rd_n,mreq_n, addr[15:0]})
-			{2'b10,16'hfffd}: begin 
-								if (r_req_last!= r_req) 
-								begin
-									r_ack = r_ack + 1; 
-									r_req_last = r_req;
-								end
-								idata = r_ack; 
-							  end         // 0xfffd
-			{2'b10,16'hfffe}: begin idata = r_req; end         // 0xfffe
-			{2'b10,16'hffff}: begin idata = r_data;  end         // 0xffff
-		endcase
-	end
+	wire [7:0] uart_out;
+
+	wire dat_wait;
+	wire valid;
+	wire tdre;
+	simpleuart uart
+	(
+		.clk(clk),
+		.resetn(~reset),
+
+		.ser_tx(tx),
+		.ser_rx(rx),
+
+		.cfg_divider(12000000/9600),
+
+		.reg_dat_we(wr_uart),
+		.reg_dat_re(rd_uart),
+		.reg_dat_di(r_data),
+		.reg_dat_do(uart_out),
+		.reg_dat_wait(dat_wait),
+		.recv_buf_valid(valid),
+		.tdre(tdre)
+	);
+
 
 	always @(*)
 	begin
-		wr_ram = 0;
-		casex ({mreq_n,addr[15:8]})
+		rd_ram1 = 0;
+		rd_ram2 = 0;
+		rd_uart = 0;
+		wr_ram1 = 0;
+		wr_ram2 = 0;
+		wr_uart = 0;
+		casex ({~wr_n,~rd_n,mreq_n,addr[15:0]})
 			// MEM MAP
-			{1'b0,8'b00xxxxxx}: wr_ram     = ~wr_n; // 0x1000-0x13ff
-		endcase
-	end
-	
-	always @(*)
-	begin
-		casex ({~wr_n,mreq_n, addr[15:0]})
-			{2'b10,16'hfffd}: begin r_ack = 8'h00;  end         // 0xfffd
-			{2'b10,16'hfffe}: begin r_req_last = r_req; r_req = odata;  end         // 0xfffe
-			{2'b10,16'hffff}: begin r_data = odata;$write("%c",odata);  end         // 0xffff
+			{3'b010,16'b000xxxxxxxxxxxxx}: begin idata = ram1_out; rd_ram1 = 1; end         // 0x0000-0x1fff
+			{3'b010,16'b0010xxxxxxxxxxxx}: begin idata = ram1_out; rd_ram1 = 1; end         // 0x2000-0x2fff
+			{3'b010,16'hfffd}: idata = ~tdre;    // 0xfffd
+			{3'b010,16'hffff}: begin idata = uart_out;  rd_uart = 1; end         // 0xffff
+			// MEM MAP
+			{3'b100,16'b000xxxxxxxxxxxxx}: wr_ram1= 1; // 0x0000-0x1fff
+			{3'b100,16'b0010xxxxxxxxxxxx}: wr_ram2= 1; // 0x2000-0x2fff
+			{3'b100,16'hffff}: begin 
+									r_data = odata;
+									wr_uart = 1;
+								    `ifdef DEBUG	
+									if (ce)
+									begin								
+										$write("%c",odata); 
+										$fflush();
+									end
+									`endif
+								end         // 0xffff
 		endcase
 	end
 	
@@ -100,5 +109,6 @@ module zexall(
 		.reset_n(~reset), .clk(clk), .wait_n(wait_n), .int_n(int_n), .nmi_n(nmi_n), .busrq_n(busrq_n), .di(idata)
 	);
 	
-	ram_memory #(.ADDR_WIDTH(14),.FILENAME("roms/zexall/zexall.bin.mem")) ram(.clk(clk),.addr(addr[13:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
+	ram_memory #(.ADDR_WIDTH(13),.FILENAME("roms/zexall/zexall-1.bin.mem")) ram1(.clk(clk),.addr(addr[12:0]),.data_in(odata),.rd(rd_ram1),.we(wr_ram1),.data_out(ram1_out));
+	ram_memory #(.ADDR_WIDTH(12),.FILENAME("roms/zexall/zexall-2.bin.mem")) ram2(.clk(clk),.addr(addr[11:0]),.data_in(odata),.rd(rd_ram2),.we(wr_ram2),.data_out(ram2_out));
 endmodule

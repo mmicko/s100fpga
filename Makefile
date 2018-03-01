@@ -15,8 +15,8 @@ SDK80_MEM=roms/sdk80/mcs80.a14.mem
 ISBC8010_SRC=rtl/isbc8010.v rtl/i8251.v rtl/i8080.v rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
 ISBC8010_MEM=roms/isbc8010/sbc80p.a23.mem roms/isbc8010/sbc80p.a24.mem roms/isbc8010/basic_blc_1.a24.mem roms/isbc8010/basic_blc_2.a25.mem roms/isbc8010/basic_blc_3.a26.mem roms/isbc8010/basic_blc_4.a27.mem
 
-ZEXALL_SRC=rtl/zexall.v rtl/i8251.v rtl/z80/tv80n.v rtl/z80/tv80_reg.v rtl/z80/tv80_mcode.v rtl/z80/tv80_core.v rtl/z80/tv80_alu.v  rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
-ZEXALL_MEM=roms/zexall/zexall.bin.mem
+ZEXALL_SRC=rtl/zexall.v rtl/z80/tv80n.v rtl/z80/tv80_reg.v rtl/z80/tv80_mcode.v rtl/z80/tv80_core.v rtl/z80/tv80_alu.v  rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
+ZEXALL_MEM=roms/zexall/zexall-1.bin.mem roms/zexall/zexall-2.bin.mem
 
 .PHONY: all clean test_altair test_sdk80 test_isbc8010 test_zexall
 
