@@ -42,21 +42,27 @@ module z80sbc(
 		rd_sio = 0;
 		wr_ram = 0;
 		wr_sio = 0;
-		if (addr[15:13]==3'b000)
+		if (mreq_n==0)
 		begin
-			idata = rom_out; 
-			rd_rom = ~rd_n;
+			if (addr[15:13]==3'b000)
+			begin
+				idata = rom_out; 
+				rd_rom = ~rd_n;
+			end
+			else 
+			begin
+				idata = ram_out;
+				rd_ram = ~rd_n;
+				wr_ram = ~wr_n;
+			end
 		end
-		else 
+		if (iorq_n==0)
 		begin
-			idata = ram_out;
-			rd_ram = ~rd_n;
-			wr_ram = ~wr_n;
+			casex ({addr[7:0]})
+				// I/O MAP - addr[15:8] == addr[7:0] for this section
+				{8'b1000000x}: begin idata = sio_out; rd_sio = ~rd_n; wr_sio = ~wr_n; end         // 0x00-0x01 0x10-0x11 
+			endcase
 		end
-		casex ({~iorq_n,addr[7:0]})
-			// I/O MAP - addr[15:8] == addr[7:0] for this section
-			{1'b1,8'b1000000x}: begin idata = sio_out; rd_sio = ~rd_n; wr_sio = ~wr_n; end         // 0x00-0x01 0x10-0x11 
-		endcase
 	end
 	
 	tv80n cpu (
