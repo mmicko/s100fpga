@@ -67,5 +67,5 @@ module z80sbc(
 	);
 	
 	rom_memory #(.ADDR_WIDTH(13),.FILENAME("roms/z80sbc/z80sbc.bin.mem")) rom(.clk(clk),.addr(addr[12:0]),.rd(rd_rom),.data_out(rom_out));
-	ram_memory #(.ADDR_WIDTH(16)) ram(.clk(clk),.addr(addr[15:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
+	ram_memory #(.ADDR_WIDTH(12)) ram(.clk(clk),.addr(addr[11:0]),.data_in(odata),.rd(rd_ram),.we(wr_ram),.data_out(ram_out));
 endmodule

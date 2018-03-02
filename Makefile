@@ -49,6 +49,11 @@ zexall.bin: build top/top_zexall.v $(ZEXALL_SRC) $(ZEXALL_MEM)
 	arachne-pnr -d 5k -p board.pcf build/zexall.blif -o build/zexall.txt
 	icepack build/zexall.txt zexall.bin
 
+z80sbc.bin: build top/top_z80sbc.v $(Z80SBC_SRC) $(Z80SBC_MEM)
+	yosys -q -p "synth_ice40 -top top -blif build/z80sbc.blif" top/top_z80sbc.v $(Z80SBC_SRC)
+	arachne-pnr -d 5k -p board.pcf build/z80sbc.blif -o build/z80sbc.txt
+	icepack build/z80sbc.txt z80sbc.bin
+
 build:
 	@mkdir -p build
 
