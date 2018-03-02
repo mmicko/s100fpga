@@ -18,7 +18,10 @@ ISBC8010_MEM=roms/isbc8010/sbc80p.a23.mem roms/isbc8010/sbc80p.a24.mem roms/isbc
 ZEXALL_SRC=rtl/zexall.v rtl/z80/tv80n.v rtl/z80/tv80_reg.v rtl/z80/tv80_mcode.v rtl/z80/tv80_core.v rtl/z80/tv80_alu.v  rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
 ZEXALL_MEM=roms/zexall/zexall-1.bin.mem roms/zexall/zexall-2.bin.mem roms/zexall/zexdoc-1.bin.mem roms/zexall/zexdoc-2.bin.mem
 
-.PHONY: all clean test_altair test_sdk80 test_isbc8010 test_zexall
+Z80SBC_SRC=rtl/z80sbc.v rtl/mc6850.v rtl/z80/tv80n.v rtl/z80/tv80_reg.v rtl/z80/tv80_mcode.v rtl/z80/tv80_core.v rtl/z80/tv80_alu.v  rtl/rom_memory.v rtl/ram_memory.v rtl/simpleuart.v
+Z80SBC_MEM=roms/z80sbc/z80sbc.bin.mem
+
+.PHONY: all clean test_altair test_sdk80 test_isbc8010 test_zexall test_z80sbc
 
 all: altair.bin
 
@@ -69,4 +72,8 @@ test_isbc8010: tb/isbc8010_tb.v $(ISBC8010_SRC) $(ISBC8010_MEM)
 
 test_zexall: tb/zexall_tb.v $(ZEXALL_SRC) $(ZEXALL_MEM)
 	iverilog -D DEBUG tb/zexall_tb.v $(ZEXALL_SRC)
+	vvp a.out
+
+test_z80sbc: tb/z80sbc_tb.v $(Z80SBC_SRC) $(Z80SBC_MEM)
+	iverilog -D DEBUG tb/z80sbc_tb.v $(Z80SBC_SRC)
 	vvp a.out
