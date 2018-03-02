@@ -82,7 +82,7 @@ module zexall(
 		casex ({~wr_n,~rd_n,mreq_n,addr[15:0]})
 			// MEM MAP
 			{3'b010,16'b000xxxxxxxxxxxxx}: begin idata = ram1_out; rd_ram1 = 1; end         // 0x0000-0x1fff
-			{3'b010,16'b0010xxxxxxxxxxxx}: begin idata = ram1_out; rd_ram1 = 1; end         // 0x2000-0x2fff
+			{3'b010,16'b0010xxxxxxxxxxxx}: begin idata = ram2_out; rd_ram2 = 1; end         // 0x2000-0x2fff
 			{3'b010,16'hfffd}: idata = ~tdre;    // 0xfffd
 			{3'b010,16'hffff}: begin idata = uart_out;  rd_uart = 1; end         // 0xffff
 			// MEM MAP
